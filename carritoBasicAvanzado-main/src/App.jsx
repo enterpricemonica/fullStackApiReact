@@ -8,6 +8,8 @@ import SalesReport from './components/SalesReport';
 import InvoiceForm from './components/InvoiceForm';
 import InvoicePDF from './components/InvoicePDF';
 import axios from 'axios'; // Importar axios
+import Register from './components/Register';
+import Login from './components/Login';
 
 const initialProducts = [];
 
@@ -80,9 +82,11 @@ const App = () => {
     }
     setShowCartMenu(true);
   };
+
   const handleRemoveFromCart = (productId) => {
     setCartItems(cartItems.filter(item => item.product.id !== productId));
   };
+
   const handleReduceQuantity = (productId) => {
     const existingItem = cartItems.find(item => item.product.id === productId);
     if (existingItem.quantity > 1) {
@@ -95,12 +99,20 @@ const App = () => {
       handleRemoveFromCart(productId);
     }
   };
+
   const handleCloseCartMenu = () => {
     setShowCartMenu(false);
   };
+
   const handlePaymentInfo = (info) => {
     setPaymentInfo(info);
   };
+  
+  const PrivateRoute = ({ children }) => {
+    const role = localStorage.getItem('role');
+    return role === 'admin' ? children : <div>No tienes acceso a esta página</div>;
+  };
+
   return (
     <div className="app">
   
@@ -125,7 +137,9 @@ const App = () => {
         <Route path="/sales-report" element={<SalesReport data={salesData} />} />
         <Route path="/invoice" element={<InvoiceForm cartItems={cartItems} />} />
         <Route path="/invoice-pdf" element={<InvoicePDF />} />
-        
+        <Route path="/register" element={<Register />} />
+        <Route path="/login" element={<Login />} />
+
       </Routes>
       {showCartMenu && (
         <CartMenu
