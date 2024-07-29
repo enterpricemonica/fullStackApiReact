@@ -11,8 +11,10 @@ import axios from 'axios'; // Importar axios
 import Register from './components/Register';
 import Login from './components/Login';
 import ManageProducts from './components/ManageProducts';
+import Pedidos from './components/Pedidos';
 
 const initialProducts = [];
+
 
 const initialSalesData = [
   { time: '2023-01-01', value: 100 },
@@ -29,6 +31,7 @@ const initialSalesData = [
   { time: '2024-05-01', value: 650 },
   { time: '2024-06-01', value: 700 },
 ];
+
 // Función de mapeo para transformar los datos de la API
 const mapProductData = (product) => {
   return {
@@ -39,6 +42,7 @@ const mapProductData = (product) => {
     // Agrega más mapeos según sea necesario
   };
 };
+
 const App = () => {
   const [products, setProducts] = useState(initialProducts);
   const [salesData] = useState(initialSalesData);
@@ -47,6 +51,7 @@ const App = () => {
   const [paymentInfo, setPaymentInfo] = useState({});
   const navigate = useNavigate();
   const location = useLocation(); // Usar useLocation para rastrear la ubicación
+
   useEffect(() => {
     const fetchProducts = async () => {
       try {
@@ -59,10 +64,13 @@ const App = () => {
         console.error('Error al obtener los productos', error);
       }
     };
+
     if (location.pathname === '/') {
       fetchProducts();
     }
   }, [location.pathname]);
+
+
   const handleAddToCart = (product, quantity) => {
     const existingItem = cartItems.find(item => item.product.id === product.id);
     if (existingItem) {
@@ -76,9 +84,11 @@ const App = () => {
     }
     setShowCartMenu(true);
   };
+
   const handleRemoveFromCart = (productId) => {
     setCartItems(cartItems.filter(item => item.product.id !== productId));
   };
+
   const handleReduceQuantity = (productId) => {
     const existingItem = cartItems.find(item => item.product.id === productId);
     if (existingItem.quantity > 1) {
@@ -91,16 +101,20 @@ const App = () => {
       handleRemoveFromCart(productId);
     }
   };
+
   const handleCloseCartMenu = () => {
     setShowCartMenu(false);
   };
+
   const handlePaymentInfo = (info) => {
     setPaymentInfo(info);
   };
+
   const PrivateRoute = ({ children }) => {
     const role = localStorage.getItem('role');
     return role === 'admin' ? children : <div>No tienes acceso a esta página</div>;
   };
+
   return (
     <div className="app">
   
@@ -128,7 +142,9 @@ const App = () => {
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
         <Route path="/manage-products" element={<PrivateRoute><ManageProducts /></PrivateRoute>} />
+        <Route path="/pedidos" element={<Pedidos />} /> {/* Nueva ruta para el componente Pedidos */}
 
+        
       </Routes>
 
       {showCartMenu && (
@@ -140,7 +156,9 @@ const App = () => {
           onReduceQuantity={handleReduceQuantity}
         />
       )}
+
     </div>
   );
 };
+
 export default App;
